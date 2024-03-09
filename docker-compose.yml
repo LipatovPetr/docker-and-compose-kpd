@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+
+  backend: 
+    container_name: compose-back-container
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    image: compose-back-image
+    ports: 
+      - 4000:3001
+    env_file: 
+      - ./backend/.env
+
+  frontend: 
+    container_name: compose-front-container
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    image: compose-front-image
+    ports: 
+      - 3005:3000
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    env_file: 
+      - ./backend/.env
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    ports: 
+      - 8081:8080
+
+

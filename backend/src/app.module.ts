@@ -11,10 +11,20 @@ import { Wishlist } from './wishlists/entities/wishlist.entity';
 import { Offer } from './offers/entities/offer.entity';
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import config from './config/configuration';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
+
+const {
+  POSTGRES_HOST,
+  POSTGRES_PORT,
+  POSTGRES_DB,
+  POSTGRES_USER,
+  POSTGRES_PASSWORD,
+} = process.env;
+
+console.log(POSTGRES_DB);
 
 @Module({
   imports: [
@@ -22,15 +32,19 @@ import { AllExceptionsFilter } from './filters/all-exceptions.filter';
       isGlobal: true,
       load: [config],
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'student',
-      password: 'student',
-      database: 'kupipodariday',
-      entities: [User, Wish, Wishlist, Offer],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: 'localhost',
+        port: parseInt(configService.get<string>('POSTGRES_PORT'), 10),
+        database: configService.get<string>('POSTGRES_DB'),
+        username: configService.get<string>('POSTGRES_USER'),
+        password: configService.get<string>('POSTGRES_PASSWORD'),
+        entities: [User, Wish, Wishlist, Offer],
+        synchronize: true,
+      }),
+      inject: [ConfigService],
     }),
     UsersModule,
     WishesModule,
