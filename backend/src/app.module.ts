@@ -16,16 +16,6 @@ import { APP_FILTER } from '@nestjs/core';
 import config from './config/configuration';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 
-const {
-  POSTGRES_HOST,
-  POSTGRES_PORT,
-  POSTGRES_DB,
-  POSTGRES_USER,
-  POSTGRES_PASSWORD,
-} = process.env;
-
-console.log(POSTGRES_DB);
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -36,8 +26,8 @@ console.log(POSTGRES_DB);
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: 'localhost',
-        port: parseInt(configService.get<string>('POSTGRES_PORT'), 10),
+        host: configService.get<string>('POSTGRES_HOST'),
+        port: configService.get<number>('POSTGRES_PORT'),
         database: configService.get<string>('POSTGRES_DB'),
         username: configService.get<string>('POSTGRES_USER'),
         password: configService.get<string>('POSTGRES_PASSWORD'),

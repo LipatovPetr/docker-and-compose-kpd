@@ -91,13 +91,7 @@ const HeaderLinks = ({ handleProfilePopupOpen, userName }) => {
     <ul className={styles.nav_box}>
       <li className={styles.nav_link}>
         <NavLink className={setInactive} to="/gifts/line">
-          <img
-            onClick={() => {
-              console.log(userCtx);
-            }}
-            src={giftIcon}
-            alt="Иконка подарков."
-          />
+          <img src={giftIcon} alt="Иконка подарков." />
           <p className="text text_type-main text_color_primary ml-3">Подарки</p>
         </NavLink>
       </li>

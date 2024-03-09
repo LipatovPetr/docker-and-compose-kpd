@@ -19,8 +19,10 @@ services:
       context: frontend
       dockerfile: Dockerfile
     image: compose-front-image
+    volumes:
+      - postgres_data:/data/postgres
     ports: 
-      - 3005:3000
+      - 3005:80
 
   postgres:
     container_name: postgres
@@ -33,5 +35,8 @@ services:
     image: adminer
     ports: 
       - 8081:8080
+
+volumes:
+  postgres_data:
 
 
